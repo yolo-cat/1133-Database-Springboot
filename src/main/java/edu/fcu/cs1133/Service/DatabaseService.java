@@ -1,4 +1,4 @@
-package fcu.iecs.demo.service;
+package edu.fcu.cs1133.Service;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
