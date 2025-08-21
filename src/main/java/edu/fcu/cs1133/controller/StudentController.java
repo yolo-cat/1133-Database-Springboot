@@ -3,74 +3,44 @@ package edu.fcu.cs1133.controller;
 import edu.fcu.cs1133.Service.StudentService;
 import edu.fcu.cs1133.model.Student;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
+
+//使用 @tag 撰寫 student API 說明文字
+import io.swagger.v3.oas.annotations.tags.Tag;
+
+@Tag(name = "Student API", description = "Operations related to students")
+
 @RestController
 @RequestMapping("/api/students")
 public class StudentController {
 
+    @Autowired
+    private StudentService studentService;
 
-  @Autowired
-  StudentService studnetService;
+    @GetMapping
+    public List<Student> getAllStudents() {
+        return studentService.getAllStudents();
+    }
 
-  @GetMapping
-  public List<Student> getAllStudents() {
-    return studnetService.getAllStudents();
-  }
+    @PostMapping
+    public Student createStudent(@RequestBody Student student) {
+        return studentService.createStudent(student);
+    }
 
+    @PutMapping("/{id}")
+    public ResponseEntity<Student> updateStudent(@PathVariable int id, @RequestBody Student studentDetails) {
+        Student updatedStudent = studentService.updateStudent(id, studentDetails);
+        return ResponseEntity.ok(updatedStudent);
+    }
 
-  //    private List<Student> students = new ArrayList<>();
-
-//    public StudentController() {
-//        students.add(new Student(1, "Tom", "Chen", "tom@fcu.edu.tw", "2000-01-01"));
-//    }
-//
-//    @PostMapping
-//    public Student createStudent(@RequestBody Student student) {
-//        student.setStudentId (students.size() + 1);
-//        students.add(student);
-//        return student;
-//    }
-//
-//    @GetMapping("/{id}")
-//    public Student getStudent(@PathVariable int id) {
-//        for (Student student: students) {
-//            if (student.getStudentId() == id) {
-//                return student;
-//            }
-//        }
-//        return null;
-//    }
-//
-//    @GetMapping
-//    public List<Student> getAllStudents() {
-//        return students;
-//    }
-//
-//    @PutMapping("/{id}")
-//    public Student updateStudent(@PathVariable int id, @RequestBody Student studentDetails) {
-//        for (Student student: students) {
-//            if (student.getStudentId() == id) {
-//                student.setFirstName(studentDetails.getFirstName());
-//                student.setLastName(studentDetails.getLastName());
-//                student.setEmail(studentDetails.getEmail());
-//                student.setBirthday(studentDetails.getBirthday());
-//                return student;
-//            }
-//        }
-//        return null;
-//    }
-//
-//    @DeleteMapping("/{id}")
-//    public void deleteStudent(@PathVariable int id) {
-//        for (Student student: students) {
-//            if (student.getStudentId() == id) {
-//                students.remove(student);
-//                return;
-//            }
-//        }
-//    }
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteStudent(@PathVariable int id) {
+        studentService.deleteStudent(id);
+        return ResponseEntity.noContent().build();
+    }
 }
