@@ -2,6 +2,7 @@ package edu.fcu.cs1133.controller;//package edu.fcu.cs1133.controller;
 
 import edu.fcu.cs1133.Service.TeacherService;
 import edu.fcu.cs1133.model.Teacher;
+import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -22,9 +23,24 @@ public class TeacherController {
     @Autowired
     private TeacherService teacherService;
 
+    @Operation(summary = "Get all teachers", description = "Retrieve a list of all teachers")
     @GetMapping
     public List<Teacher> getAllTeachers() {
         return teacherService.getAllTeachers();
+    }
+
+    @Operation(summary = "Get teacher by ID", description = "Retrieve a teacher by their ID")
+    @GetMapping("/{id}")
+    public ResponseEntity<Teacher> getTeacherById(@PathVariable int id) {
+        Teacher teacher = teacherService.getAllTeachers().stream()
+                .filter(t -> t.getTeacherId() == id)
+                .findFirst()
+                .orElse(null);
+        if (teacher != null) {
+            return ResponseEntity.ok(teacher);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @PostMapping
