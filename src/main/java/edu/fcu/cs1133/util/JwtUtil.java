@@ -64,10 +64,10 @@ public class JwtUtil {
 
         if (userDetails instanceof Student student) {
             claims.put("id", student.getStudentId());
-            claims.put("name", student.getFirstName());
+            claims.put("name", student.getFirstName() != null ? student.getFirstName() : ""); // Handle null
         } else if (userDetails instanceof Teacher teacher) {
             claims.put("id", teacher.getTeacherId());
-            claims.put("name", teacher.getName());
+            claims.put("name", teacher.getName() != null ? teacher.getName() : ""); // Handle null
         }
         return createToken(claims, userDetails.getUsername());
     }
